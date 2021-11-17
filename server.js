@@ -7,7 +7,7 @@ import User from './models/user';
 import jwt from 'jsonwebtoken';
 import config from 'config';
 import auth from './middleware/auth';
-
+import post from './models/Post'
 
 //Initialize express application
 const app = express();
@@ -171,6 +171,53 @@ const returnToken = (user, res) => {
     }
   );
 };
+
+// Post endpoints
+/**
+ * @route POST api/posts
+ * @desc Create post
+ */
+app.post(
+  '/api/posts',
+  [
+    auth,
+    [
+      check('title', 'Title text is required')
+        .not()
+        .isEmpty(),
+      check('body', 'Body text is required')
+        .not()
+        .isEmpty()
+    ]
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+    } else {
+      const { title, body } = req.body;
+      try {
+        // Get the user who created the post
+        const user = await User.findById(req.user.id);
+
+        // Create a new post
+        const post = new Post({
+          user: user.id,
+          title: title,
+          body: body
+        });
+
+        // Save to the db and return
+        await post.save();
+
+        res.json(post);
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+      }
+    }
+  }
+);
 
 //Connection listener
 const port = 5000;
