@@ -7,7 +7,7 @@ import User from './models/user';
 import jwt from 'jsonwebtoken';
 import config from 'config';
 import auth from './middleware/auth';
-import post from './models/Post'
+import Post from './models/Post'
 
 //Initialize express application
 const app = express();
@@ -218,6 +218,21 @@ app.post(
     }
   }
 );
+
+/**
+ * @route GET api/posts
+ * @desc Get posts
+ */
+app.get('/api/posts', auth, async (req, res) => {
+  try {
+    const posts = await Post.find().sort({ date: -1 });
+
+    res.json(posts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+});
 
 //Connection listener
 const port = 5000;
