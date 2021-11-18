@@ -3,7 +3,7 @@ import connectDatabase from './config/db';
 import {check, validationResult} from 'express-validator';
 import cors from 'cors';
 import bcrypt from 'bcryptjs';
-import User from './models/user';
+import User from './models/User';
 import jwt from 'jsonwebtoken';
 import config from 'config';
 import auth from './middleware/auth';
