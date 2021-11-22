@@ -36,7 +36,7 @@ class App extends React.Component {
         }
       };
       axios
-        .get('api/auth', config)
+        .get('/api/auth', config)
         .then(response => {
           localStorage.setItem('user', response.data.name);
           this.setState(
@@ -67,7 +67,7 @@ class App extends React.Component {
         }
       };
       axios
-        .get('api/posts', config)
+        .get('/api/posts', config)
         .then(response => {
           this.setState({
             posts: response.data
